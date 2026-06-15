@@ -5,6 +5,7 @@
 *.class
 *.MF
 *.class
+pom.xml
 
 # .NET
 **/bin/
@@ -13,3 +14,6 @@
 appsettings.*.Local.json
 **/secrets.json
 .claude/
+
+# Local NuGet packages (place .nupkg files here, don't commit them)
+local-packages/*.nupkg
