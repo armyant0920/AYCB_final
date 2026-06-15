@@ -1,16 +1,63 @@
+@model IEnumerable<CorporateSite.Web.Models.NewsDto>
 @{
     ViewData["Title"] = "首頁";
 }
-<section class="hero py-5 text-center">
-    <h1 class="display-5 fw-bold">歡迎來到企業官網</h1>
-    <p class="lead text-muted">此處由美工團隊維護靜態內容，骨架由開發團隊提供。</p>
+
+@* Hero Banner *@
+<section class="hero">
+    <div class="container">
+        <h1>歡迎來到企業官網</h1>
+        <p class="lead">專注於永續發展，為客戶與社會創造長期價值。</p>
+        <a asp-controller="News" asp-action="Index" class="btn btn-light">
+            <i class="fa fa-newspaper-o me-1"></i> 查看最新消息
+        </a>
+    </div>
 </section>
 
-<section class="py-4">
+@* Latest News *@
+<section class="py-5">
     <div class="container">
-        <h2 class="mb-3">最新消息</h2>
-        <p class="text-muted">
-            <a asp-controller="News" asp-action="Index" class="btn btn-outline-primary">查看所有消息 →</a>
-        </p>
+        <h2 class="section-title">最新消息</h2>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="row g-4">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card news-card h-100">
+                            <div class="card-body">
+                                <span class="badge bg-primary mb-2">@item.Category</span>
+                                <h5 class="card-title">
+                                    <a asp-controller="News" asp-action="Details" asp-route-id="@item.NewsId"
+                                       class="text-decoration-none text-dark stretched-link">@item.Title</a>
+                                </h5>
+                                @if (!string.IsNullOrWhiteSpace(item.Summary))
+                                {
+                                    <p class="card-text text-muted small">@item.Summary</p>
+                                }
+                            </div>
+                            <div class="card-footer">
+                                <i class="fa fa-calendar-o me-1"></i>
+                                @item.PublishedAt?.ToString("yyyy-MM-dd")
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="text-center mt-4">
+                <a asp-controller="News" asp-action="Index" class="btn btn-outline-primary px-4">
+                    查看所有消息 <i class="fa fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <p class="text-muted mb-3">目前尚無公開消息，敬請期待。</p>
+                <a asp-controller="News" asp-action="Index" class="btn btn-outline-primary">前往消息頁面</a>
+            </div>
+        }
     </div>
 </section>

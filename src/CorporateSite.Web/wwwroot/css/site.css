@@ -1,19 +1,105 @@
 /* ===== 公開頁面樣式 — 由美工維護此檔案 ===== */
 
+/* ── General ── */
 body {
     font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+    color: #333;
 }
 
+/* ── Header ── */
 .site-header {
     position: sticky;
     top: 0;
     z-index: 1000;
 }
 
-.site-footer {
+.navbar-brand .fw-bold {
+    font-size: 1.2rem;
+    color: #1a3c6e;
 }
 
-/* 新聞內容區：圖片自適應寬度 */
+/* ── Hero Section ── */
+.hero {
+    background: linear-gradient(135deg, #1a3c6e 0%, #2d6aad 100%);
+    color: #fff;
+    padding: 5rem 1.5rem;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+
+.hero .lead {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,.85);
+    max-width: 600px;
+    margin: 0 auto 1.8rem;
+}
+
+.hero .btn-light {
+    font-weight: 600;
+    padding: .6rem 2rem;
+    border-radius: 2rem;
+}
+
+/* ── Section Titles ── */
+.section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a3c6e;
+    padding-bottom: .5rem;
+    border-bottom: 3px solid #2d6aad;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+/* ── News Cards ── */
+.news-card {
+    border: none;
+    border-radius: .5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.news-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,.14);
+    transform: translateY(-3px);
+}
+
+.news-card .card-footer {
+    background: transparent;
+    border-top: 1px solid #f0f0f0;
+    font-size: .8rem;
+    color: #888;
+}
+
+.news-card .badge {
+    font-size: .75rem;
+    border-radius: .25rem;
+}
+
+/* ── Footer ── */
+.site-footer {
+    background-color: #1a3c6e;
+    color: rgba(255,255,255,.75);
+    padding: 2.5rem 0 1.5rem;
+    font-size: .9rem;
+}
+
+.site-footer a {
+    color: rgba(255,255,255,.7);
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    color: #fff;
+}
+
+/* ── News Detail Page ── */
 .news-body img {
     max-width: 100%;
     height: auto;
@@ -27,4 +113,42 @@ body {
 .news-body figcaption {
     font-size: 0.875rem;
     color: #6c757d;
+}
+
+/* ── Utilities ── */
+.bg-corporate {
+    background-color: #1a3c6e !important;
+}
+
+.text-corporate {
+    color: #1a3c6e !important;
+}
+
+/* ── Responsive spacing for main content ── */
+main > .container,
+main > section > .container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* ── Button: primary outline corporate colour ── */
+.btn-outline-primary {
+    --bs-btn-color: #1a3c6e;
+    --bs-btn-border-color: #1a3c6e;
+    --bs-btn-hover-bg: #1a3c6e;
+    --bs-btn-hover-border-color: #1a3c6e;
+    --bs-btn-active-bg: #1a3c6e;
+}
+
+.btn-primary {
+    --bs-btn-bg: #1a3c6e;
+    --bs-btn-border-color: #1a3c6e;
+    --bs-btn-hover-bg: #2d6aad;
+    --bs-btn-hover-border-color: #2d6aad;
+    --bs-btn-active-bg: #2d6aad;
+}
+
+/* ── Anchor colour inside cards ── */
+.news-card .card-title a:hover {
+    color: #2d6aad !important;
 }
