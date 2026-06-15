@@ -8,6 +8,6 @@
   <ItemGroup>
     <!-- DataProviderInfrastructure 2.0.27 — 請加入本地 NuGet 來源後 restore -->
     <PackageReference Include="DataProviderInfrastructure" Version="2.0.27" />
-    <PackageReference Include="HtmlSanitizer.NetCore3.1" Version="1.0.0" />
+    <!-- HtmlSanitizer 暫時移除：NetCore3.1 版本的相依 AngleSharp.Css 0.14.2 環境中不存在 -->
   </ItemGroup>
 </Project>
