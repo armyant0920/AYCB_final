@@ -7,6 +7,7 @@ public class NewsDto
     public string Summary { get; set; } = "";
     public string BodyHtml { get; set; } = "";
     public string Category { get; set; } = "";
+    public string Language { get; set; } = "zh-TW";
     public int Status { get; set; }
     public DateTime? PublishedAt { get; set; }
 }

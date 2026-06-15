@@ -20,22 +20,24 @@ public class NewsRepository
     private DataProvideAdapter Db() => new(_connStr, _engine);
 
     private const string Cols = @"
-        NewsId, Title, Summary, BodyHtml, Category,
+        NewsId, Title, Summary, BodyHtml, Category, Language,
         Status, PublishedAt, CreatedAt, UpdatedAt, CreatedBy, IsDeleted";
 
-    public List<News> GetPublished(string? category, int top)
+    public List<News> GetPublished(string? category, string? language, int top)
     {
         const string sql = $@"
             SELECT TOP (@Top) {Cols} FROM dbo.News
             WHERE IsDeleted=0 AND Status=1
               AND (@Category IS NULL OR Category=@Category)
+              AND (@Language IS NULL OR Language=@Language)
             ORDER BY PublishedAt DESC";
 
         using var db = Db();
         return db.Query<News>(sql,
         [
             new SqlParameter("@Top",      SqlDbType.Int)          { Value = top },
-            new SqlParameter("@Category", SqlDbType.NVarChar, 50) { Value = (object?)category ?? DBNull.Value }
+            new SqlParameter("@Category", SqlDbType.NVarChar, 50) { Value = (object?)category ?? DBNull.Value },
+            new SqlParameter("@Language", SqlDbType.NVarChar, 10) { Value = (object?)language ?? DBNull.Value },
         ]);
     }
 
@@ -46,21 +48,26 @@ public class NewsRepository
         return db.Query<News>(sql, [new SqlParameter("@Id", SqlDbType.Int) { Value = id }]).FirstOrDefault();
     }
 
-    public PagedResult<News> GetList(int page, int pageSize, string? category, int? status)
+    public PagedResult<News> GetList(int page, int pageSize, string? category, string? language, int? status)
     {
-        SqlParameter[] ps =
+        SqlParameter[] filterPs =
         [
             new("@Category", SqlDbType.NVarChar, 50) { Value = (object?)category ?? DBNull.Value },
+            new("@Language", SqlDbType.NVarChar, 10) { Value = (object?)language ?? DBNull.Value },
             new("@Status",   SqlDbType.Int)          { Value = (object?)status   ?? DBNull.Value },
         ];
-        const string where = "WHERE IsDeleted=0 AND (@Category IS NULL OR Category=@Category) AND (@Status IS NULL OR Status=@Status)";
+        const string where = @"WHERE IsDeleted=0
+              AND (@Category IS NULL OR Category=@Category)
+              AND (@Language IS NULL OR Language=@Language)
+              AND (@Status IS NULL OR Status=@Status)";
 
         using var db = Db();
-        int total = db.QueryScalar<int>($"SELECT COUNT(*) FROM dbo.News {where}", ps);
+        int total = db.QueryScalar<int>($"SELECT COUNT(*) FROM dbo.News {where}", filterPs);
 
         SqlParameter[] listPs =
         [
             new("@Category", SqlDbType.NVarChar, 50) { Value = (object?)category ?? DBNull.Value },
+            new("@Language", SqlDbType.NVarChar, 10) { Value = (object?)language ?? DBNull.Value },
             new("@Status",   SqlDbType.Int)          { Value = (object?)status   ?? DBNull.Value },
             new("@Offset",   SqlDbType.Int)          { Value = (page - 1) * pageSize },
             new("@PageSize", SqlDbType.Int)          { Value = pageSize },
@@ -75,8 +82,10 @@ public class NewsRepository
     public int Insert(News n)
     {
         const string sql = @"
-            INSERT INTO dbo.News (Title,Summary,BodyHtml,Category,CoverImageId,Status,PublishedAt,CreatedAt,UpdatedAt,CreatedBy,IsDeleted)
-            VALUES (@Title,@Summary,@BodyHtml,@Category,0,@Status,@PublishedAt,@CreatedAt,@UpdatedAt,@CreatedBy,0)";
+            INSERT INTO dbo.News
+                (Title,Summary,BodyHtml,Category,Language,CoverImageId,Status,PublishedAt,CreatedAt,UpdatedAt,CreatedBy,IsDeleted)
+            VALUES
+                (@Title,@Summary,@BodyHtml,@Category,@Language,0,@Status,@PublishedAt,@CreatedAt,@UpdatedAt,@CreatedBy,0)";
 
         using var db = Db();
         using var conn = db.CreateConnection();
@@ -89,8 +98,10 @@ public class NewsRepository
     public void Update(News n)
     {
         const string sql = @"
-            UPDATE dbo.News SET Title=@Title,Summary=@Summary,BodyHtml=@BodyHtml,
-            Category=@Category,Status=@Status,PublishedAt=@PublishedAt,UpdatedAt=@UpdatedAt
+            UPDATE dbo.News SET
+                Title=@Title, Summary=@Summary, BodyHtml=@BodyHtml,
+                Category=@Category, Language=@Language,
+                Status=@Status, PublishedAt=@PublishedAt, UpdatedAt=@UpdatedAt
             WHERE NewsId=@NewsId AND IsDeleted=0";
 
         var ps = Params(n).Append(new SqlParameter("@NewsId", SqlDbType.Int) { Value = n.NewsId });
@@ -109,7 +120,7 @@ public class NewsRepository
         db.BeginTransaction(conn);
         db.ExecuteNonQueryCommand(new CommandSetting(sql,
         [
-            new SqlParameter("@Id",  SqlDbType.Int)      { Value = id },
+            new SqlParameter("@Id",  SqlDbType.Int)       { Value = id },
             new SqlParameter("@Now", SqlDbType.DateTime2) { Value = DateTime.UtcNow }
         ], CommandType.Text));
         db.GetTransaction().Commit();
@@ -121,6 +132,7 @@ public class NewsRepository
         new("@Summary",     SqlDbType.NVarChar, 500) { Value = n.Summary },
         new("@BodyHtml",    SqlDbType.NVarChar, -1)  { Value = n.BodyHtml },
         new("@Category",    SqlDbType.NVarChar, 50)  { Value = n.Category },
+        new("@Language",    SqlDbType.NVarChar, 10)  { Value = n.Language },
         new("@Status",      SqlDbType.Int)            { Value = n.Status },
         new("@PublishedAt", SqlDbType.DateTime2)      { Value = (object?)n.PublishedAt ?? DBNull.Value },
         new("@CreatedAt",   SqlDbType.DateTime2)      { Value = n.CreatedAt },

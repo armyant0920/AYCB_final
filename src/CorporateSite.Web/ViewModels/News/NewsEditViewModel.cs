@@ -18,5 +18,8 @@ public class NewsEditViewModel
     [Required]
     public string Category { get; set; } = "CompanyNews";
 
+    [Required]
+    public string Language { get; set; } = "zh-TW";
+
     public bool Publish { get; set; }
 }

@@ -8,7 +8,7 @@
 
 <table class="table table-hover align-middle">
     <thead class="table-light">
-        <tr><th>標題</th><th>分類</th><th>狀態</th><th>發佈時間</th><th style="width:130px"></th></tr>
+        <tr><th>標題</th><th>分類</th><th>語言</th><th>狀態</th><th>發佈時間</th><th style="width:130px"></th></tr>
     </thead>
     <tbody>
         @foreach (var n in Model.Items)
@@ -16,6 +16,7 @@
             <tr>
                 <td>@n.Title</td>
                 <td>@n.Category</td>
+                <td><span class="badge bg-secondary">@n.Language</span></td>
                 <td>
                     <span class="badge @(n.Status == 1 ? "bg-success" : "bg-warning text-dark")">
                         @(n.Status == 1 ? "已發佈" : "草稿")

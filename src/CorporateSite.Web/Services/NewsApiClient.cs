@@ -3,9 +3,6 @@ using CorporateSite.Web.Models;
 
 namespace CorporateSite.Web.Services;
 
-/// <summary>
-/// 呼叫 CorporateSite.Api 的新聞端點。Api 未啟動時返回空結果，不拋例外。
-/// </summary>
 public class NewsApiClient
 {
     private readonly HttpClient _http;
@@ -17,11 +14,13 @@ public class NewsApiClient
         _logger = logger;
     }
 
-    public async Task<List<NewsDto>> GetPublishedAsync(string? category = null, int top = 20)
+    public async Task<List<NewsDto>> GetPublishedAsync(string? category = null, string? language = null, int top = 20)
     {
         try
         {
-            var url = $"/api/news/published?top={top}" + (category != null ? $"&category={Uri.EscapeDataString(category)}" : "");
+            var url = $"/api/news/published?top={top}";
+            if (category != null) url += $"&category={Uri.EscapeDataString(category)}";
+            if (language != null) url += $"&language={Uri.EscapeDataString(language)}";
             return await _http.GetFromJsonAsync<List<NewsDto>>(url) ?? [];
         }
         catch (Exception ex)
@@ -44,13 +43,15 @@ public class NewsApiClient
         }
     }
 
-    public async Task<PagedResult<NewsDto>> GetListAsync(int page = 1, int pageSize = 20, string? category = null, int? status = null)
+    public async Task<PagedResult<NewsDto>> GetListAsync(int page = 1, int pageSize = 20,
+        string? category = null, string? language = null, int? status = null)
     {
         try
         {
             var url = $"/api/news?page={page}&pageSize={pageSize}";
             if (category != null) url += $"&category={Uri.EscapeDataString(category)}";
-            if (status.HasValue) url += $"&status={status}";
+            if (language != null) url += $"&language={Uri.EscapeDataString(language)}";
+            if (status.HasValue)  url += $"&status={status}";
             return await _http.GetFromJsonAsync<PagedResult<NewsDto>>(url) ?? new PagedResult<NewsDto>();
         }
         catch (Exception ex)
@@ -60,23 +61,53 @@ public class NewsApiClient
         }
     }
 
-    public async Task<int> CreateAsync(NewsEditRequest req)
+    // 寫入操作：不靜默吞例外，由 Controller 處理錯誤訊息
+    public async Task<(bool ok, string error)> CreateAsync(NewsEditRequest req)
     {
-        var resp = await _http.PostAsJsonAsync("/api/news", req);
-        resp.EnsureSuccessStatusCode();
-        return await resp.Content.ReadFromJsonAsync<int>();
+        try
+        {
+            var resp = await _http.PostAsJsonAsync("/api/news", req);
+            if (!resp.IsSuccessStatusCode)
+                return (false, $"API 回應 {(int)resp.StatusCode}");
+            return (true, "");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "CreateAsync failed");
+            return (false, "無法連線至 API 伺服器");
+        }
     }
 
-    public async Task UpdateAsync(int id, NewsEditRequest req)
+    public async Task<(bool ok, string error)> UpdateAsync(int id, NewsEditRequest req)
     {
-        var resp = await _http.PutAsJsonAsync($"/api/news/{id}", req);
-        resp.EnsureSuccessStatusCode();
+        try
+        {
+            var resp = await _http.PutAsJsonAsync($"/api/news/{id}", req);
+            if (!resp.IsSuccessStatusCode)
+                return (false, $"API 回應 {(int)resp.StatusCode}");
+            return (true, "");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "UpdateAsync failed");
+            return (false, "無法連線至 API 伺服器");
+        }
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task<(bool ok, string error)> DeleteAsync(int id)
     {
-        var resp = await _http.DeleteAsync($"/api/news/{id}");
-        resp.EnsureSuccessStatusCode();
+        try
+        {
+            var resp = await _http.DeleteAsync($"/api/news/{id}");
+            if (!resp.IsSuccessStatusCode)
+                return (false, $"API 回應 {(int)resp.StatusCode}");
+            return (true, "");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "DeleteAsync failed");
+            return (false, "無法連線至 API 伺服器");
+        }
     }
 }
 
@@ -86,6 +117,7 @@ public class NewsEditRequest
     public string Summary { get; set; } = "";
     public string BodyHtml { get; set; } = "";
     public string Category { get; set; } = "CompanyNews";
+    public string Language { get; set; } = "zh-TW";
     public bool Publish { get; set; }
     public string CreatedBy { get; set; } = "";
 }

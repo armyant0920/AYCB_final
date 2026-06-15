@@ -10,9 +10,11 @@ public class NewsController : Controller
     private readonly NewsApiClient _api;
     public NewsController(NewsApiClient api) => _api = api;
 
-    public async Task<IActionResult> Index(int page = 1)
+    public async Task<IActionResult> Index(int page = 1, string? category = null, string? language = null)
     {
-        var result = await _api.GetListAsync(page, pageSize: 20);
+        var result = await _api.GetListAsync(page, pageSize: 20, category: category, language: language);
+        ViewBag.Category = category;
+        ViewBag.Language = language;
         return View(result);
     }
 
@@ -26,12 +28,13 @@ public class NewsController : Controller
 
         return View(new NewsEditViewModel
         {
-            NewsId = news.NewsId,
-            Title = news.Title,
-            Summary = news.Summary,
+            NewsId   = news.NewsId,
+            Title    = news.Title,
+            Summary  = news.Summary,
             BodyHtml = news.BodyHtml,
             Category = news.Category,
-            Publish = news.Status == 1,
+            Language = news.Language,
+            Publish  = news.Status == 1,
         });
     }
 
@@ -43,18 +46,26 @@ public class NewsController : Controller
 
         var req = new NewsEditRequest
         {
-            Title = vm.Title,
-            Summary = vm.Summary,
+            Title    = vm.Title,
+            Summary  = vm.Summary,
             BodyHtml = vm.BodyHtml,
             Category = vm.Category,
-            Publish = vm.Publish,
+            Language = vm.Language,
+            Publish  = vm.Publish,
             CreatedBy = User.Identity?.Name ?? "system",
         };
 
+        (bool ok, string error) result;
         if (vm.NewsId == null)
-            await _api.CreateAsync(req);
+            result = await _api.CreateAsync(req);
         else
-            await _api.UpdateAsync(vm.NewsId.Value, req);
+            result = await _api.UpdateAsync(vm.NewsId.Value, req);
+
+        if (!result.ok)
+        {
+            ModelState.AddModelError("", $"儲存失敗：{result.error}");
+            return View(vm);
+        }
 
         return RedirectToAction(nameof(Index));
     }
