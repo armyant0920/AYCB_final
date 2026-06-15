@@ -1,0 +1,48 @@
+@model List<CorporateSite.Web.Models.ArticleDto>
+@{
+    ViewData["Title"] = "文章";
+    string? sec = ViewBag.Section;
+}
+
+<div class="container py-5">
+    <h1 class="section-title mb-4">@(sec ?? "文章總覽")</h1>
+
+    <div class="mb-4">
+        <a asp-controller="Article" asp-action="Index"
+           class="btn btn-sm @(sec == null ? "btn-primary" : "btn-outline-secondary") me-1">全部</a>
+        <a asp-controller="Article" asp-action="Index" asp-route-section="About"
+           class="btn btn-sm @(sec == "About" ? "btn-primary" : "btn-outline-secondary") me-1">關於我們</a>
+        <a asp-controller="Article" asp-action="Index" asp-route-section="ESG"
+           class="btn btn-sm @(sec == "ESG" ? "btn-primary" : "btn-outline-secondary") me-1">ESG</a>
+        <a asp-controller="Article" asp-action="Index" asp-route-section="Investor"
+           class="btn btn-sm @(sec == "Investor" ? "btn-primary" : "btn-outline-secondary")">投資人專區</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <p class="text-muted">目前尚無文章。</p>
+        </div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var item in Model)
+            {
+                <a asp-controller="Article" asp-action="Details" asp-route-slug="@item.Slug"
+                   class="list-group-item list-group-item-action py-3">
+                    <div class="d-flex align-items-start gap-3">
+                        <span class="badge bg-primary mt-1">@item.Section</span>
+                        <div>
+                            <h5 class="mb-1">@item.Title</h5>
+                            @if (!string.IsNullOrWhiteSpace(item.Summary))
+                            {
+                                <p class="mb-0 text-muted small">@item.Summary</p>
+                            }
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+</div>

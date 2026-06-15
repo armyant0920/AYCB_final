@@ -1,0 +1,93 @@
+@model CorporateSite.Web.ViewModels.Article.ArticleEditViewModel
+@{ ViewData["Title"] = Model.ArticleId == null ? "新增文章" : "編輯文章"; }
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-area="Admin" asp-controller="Article" asp-action="Edit" method="post" class="mt-3">
+    @Html.AntiForgeryToken()
+    @if (Model.ArticleId.HasValue)
+    {
+        <input type="hidden" asp-for="ArticleId" />
+    }
+
+    <div asp-validation-summary="All" class="alert alert-danger py-2 mb-3"></div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="Slug" class="form-label fw-semibold">
+                Slug <span class="text-danger">*</span>
+                <small class="text-muted fw-normal">（URL識別鍵，如 about-us）</small>
+            </label>
+            <input asp-for="Slug" class="form-control font-monospace" placeholder="about-us" />
+            <span asp-validation-for="Slug" class="text-danger small"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Section" class="form-label fw-semibold">區塊</label>
+            <select asp-for="Section" class="form-select">
+                <option value="About">關於我們</option>
+                <option value="ESG">ESG</option>
+                <option value="Investor">投資人專區</option>
+                <option value="Career">人才召募</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Language" class="form-label fw-semibold">語言</label>
+            <select asp-for="Language" class="form-select">
+                <option value="zh-TW">繁體中文</option>
+                <option value="en-US">English</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label fw-semibold">標題 <span class="text-danger">*</span></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Summary" class="form-label fw-semibold">摘要</label>
+        <textarea asp-for="Summary" class="form-control" rows="2"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BodyHtml" class="form-label fw-semibold">內容</label>
+        <textarea asp-for="BodyHtml" id="editor" class="form-control"></textarea>
+    </div>
+
+    <div class="row mb-4 align-items-center">
+        <div class="col-auto">
+            <label asp-for="SortOrder" class="form-label fw-semibold mb-0">排序</label>
+            <input asp-for="SortOrder" type="number" class="form-control" style="width:80px" />
+        </div>
+        <div class="col-auto pt-3">
+            <div class="form-check">
+                <input asp-for="Publish" class="form-check-input" type="checkbox" />
+                <label asp-for="Publish" class="form-check-label">立即發佈</label>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">儲存</button>
+    <a asp-area="Admin" asp-controller="Article" asp-action="Index" class="btn btn-outline-secondary ms-2">取消</a>
+</form>
+
+@section Scripts {
+<script src="~/lib/ckeditor5/ckeditor.js"></script>
+<script>
+(function () {
+    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+    const textarea = document.querySelector('#editor');
+    ClassicEditor.create(textarea, {
+        simpleUpload: {
+            uploadUrl: '@Url.Action("Image", "Upload", new { area = "Admin" })',
+            headers: { 'RequestVerificationToken': token }
+        }
+    }).then(editor => {
+        document.querySelector('form').addEventListener('submit', function () {
+            textarea.value = editor.getData();
+        });
+    }).catch(err => console.error('CKEditor init error:', err));
+})();
+</script>
+}

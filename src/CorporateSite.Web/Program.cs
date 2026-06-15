@@ -14,6 +14,7 @@ builder.Services.AddAntiforgery(o => o.HeaderName = "RequestVerificationToken");
 if (builder.Configuration.GetValue<bool>("UseMockData"))
 {
     builder.Services.AddSingleton<INewsService, MockNewsService>();
+    builder.Services.AddSingleton<IArticleService, MockArticleService>();
 }
 else
 {
@@ -22,6 +23,12 @@ else
         client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7001");
     });
     builder.Services.AddScoped<INewsService>(sp => sp.GetRequiredService<NewsApiClient>());
+
+    builder.Services.AddHttpClient<ArticleApiClient>(client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7001");
+    });
+    builder.Services.AddScoped<IArticleService>(sp => sp.GetRequiredService<ArticleApiClient>());
 }
 
 if (!builder.Environment.IsDevelopment())

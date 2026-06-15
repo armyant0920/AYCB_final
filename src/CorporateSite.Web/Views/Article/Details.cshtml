@@ -1,0 +1,26 @@
+@model CorporateSite.Web.Models.ArticleDto
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container py-5" style="max-width:860px">
+    <article>
+        <header class="mb-4">
+            <span class="badge bg-secondary mb-2">@Model.Section</span>
+            <h1 class="h2 mt-1">@Model.Title</h1>
+            @if (!string.IsNullOrEmpty(Model.Summary))
+            {
+                <p class="lead border-start border-3 border-primary ps-3 text-muted">@Model.Summary</p>
+            }
+            <hr />
+        </header>
+        <div class="news-body">
+            @Html.Raw(Model.BodyHtml)
+        </div>
+    </article>
+    <div class="mt-5">
+        <a asp-controller="Article" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-1"></i>返回列表
+        </a>
+    </div>
+</div>

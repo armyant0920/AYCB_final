@@ -1,0 +1,57 @@
+@model CorporateSite.Web.Models.PagedResult<CorporateSite.Web.Models.ArticleDto>
+@{ ViewData["Title"] = "文章管理"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>文章管理</h2>
+    <a asp-area="Admin" asp-controller="Article" asp-action="Edit" class="btn btn-primary">＋ 新增</a>
+</div>
+
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Slug</th><th>標題</th><th>區塊</th><th>語言</th>
+            <th>排序</th><th>狀態</th><th style="width:130px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model.Items)
+        {
+            <tr>
+                <td class="text-muted small font-monospace">@a.Slug</td>
+                <td>@a.Title</td>
+                <td>@a.Section</td>
+                <td><span class="badge bg-secondary">@a.Language</span></td>
+                <td>@a.SortOrder</td>
+                <td>
+                    <span class="badge @(a.Status == 1 ? "bg-success" : "bg-warning text-dark")">
+                        @(a.Status == 1 ? "已發佈" : "草稿")
+                    </span>
+                </td>
+                <td>
+                    <a asp-area="Admin" asp-controller="Article" asp-action="Edit"
+                       asp-route-id="@a.ArticleId" class="btn btn-sm btn-outline-primary me-1">編輯</a>
+                    <form asp-area="Admin" asp-controller="Article" asp-action="Delete"
+                          method="post" class="d-inline"
+                          onsubmit="return confirm('確定要刪除「@a.Title」？')">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@a.ArticleId" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger">刪除</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav><ul class="pagination">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Page ? "active" : "")">
+                <a class="page-link" asp-area="Admin" asp-controller="Article"
+                   asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+    </ul></nav>
+}

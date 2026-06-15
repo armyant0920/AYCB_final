@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<NewsRepository>();
+builder.Services.AddScoped<ArticleRepository>();
 
 // CORS：只允許 Web 專案來源
 builder.Services.AddCors(o => o.AddPolicy("WebOnly", p =>
