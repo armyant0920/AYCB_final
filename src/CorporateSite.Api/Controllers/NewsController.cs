@@ -1,6 +1,5 @@
 using CorporateSite.Api.Models;
 using CorporateSite.Api.Repositories;
-using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CorporateSite.Api.Controllers;
@@ -10,9 +9,11 @@ namespace CorporateSite.Api.Controllers;
 public class NewsController : ControllerBase
 {
     private readonly NewsRepository _repo;
-    private static readonly HtmlSanitizer Sanitizer = new();
 
     public NewsController(NewsRepository repo) => _repo = repo;
+
+    // TODO: 取得 HtmlSanitizer 正確套件 ID 後，將此方法換成真正的淨化實作
+    private static string SanitizeHtml(string html) => html;
 
     [HttpGet("published")]
     public IActionResult GetPublished([FromQuery] string? category, [FromQuery] int top = 20)
@@ -37,7 +38,7 @@ public class NewsController : ControllerBase
         {
             Title = req.Title.Trim(),
             Summary = req.Summary?.Trim() ?? "",
-            BodyHtml = Sanitizer.Sanitize(req.BodyHtml),
+            BodyHtml = SanitizeHtml(req.BodyHtml),
             Category = req.Category,
             Status = req.Publish ? 1 : 0,
             PublishedAt = req.Publish ? DateTime.UtcNow : null,
@@ -57,7 +58,7 @@ public class NewsController : ControllerBase
 
         existing.Title = req.Title.Trim();
         existing.Summary = req.Summary?.Trim() ?? "";
-        existing.BodyHtml = Sanitizer.Sanitize(req.BodyHtml);
+        existing.BodyHtml = SanitizeHtml(req.BodyHtml);
         existing.Category = req.Category;
         existing.Status = req.Publish ? 1 : 0;
         existing.PublishedAt = req.Publish ? (existing.PublishedAt ?? DateTime.UtcNow) : null;

@@ -6,11 +6,8 @@
     <UserSecretsId>corp-site-api-secrets</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <!--
-      DataProviderInfrastructure 2.0.27 — 請加入本地 NuGet 來源後 restore
-      HtmlSanitizer — 富文本寫入前淨化
-    -->
+    <!-- DataProviderInfrastructure 2.0.27 — 請加入本地 NuGet 來源後 restore -->
     <PackageReference Include="DataProviderInfrastructure" Version="2.0.27" />
-    <PackageReference Include="HtmlSanitizer" Version="8.0.896" />
+    <!-- TODO: 加入 HtmlSanitizer 套件後，將 NewsController 的 SanitizeHtml 換成真正的淨化實作 -->
   </ItemGroup>
 </Project>

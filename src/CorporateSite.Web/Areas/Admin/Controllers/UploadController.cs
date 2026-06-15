@@ -1,4 +1,3 @@
-using CorporateSite.Application.Abstractions.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,8 +7,10 @@ namespace CorporateSite.Web.Areas.Admin.Controllers;
 [Authorize(Roles = "Admin,Editor")]
 public class UploadController : Controller
 {
-    private readonly IFileStorageService _storage;
-    public UploadController(IFileStorageService storage) => _storage = storage;
+    private static readonly string[] AllowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+    private readonly IWebHostEnvironment _env;
+
+    public UploadController(IWebHostEnvironment env) => _env = env;
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -19,15 +20,18 @@ public class UploadController : Controller
         if (upload == null || upload.Length == 0)
             return BadRequest(new { error = new { message = "未提供檔案" } });
 
-        try
-        {
-            var saved = await _storage.SaveAsync(
-                upload.OpenReadStream(), upload.FileName, upload.ContentType, FileKind.Image);
-            return Ok(new { url = saved.PublicUrl });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { error = new { message = ex.Message } });
-        }
+        var ext = Path.GetExtension(upload.FileName).ToLowerInvariant();
+        if (!AllowedExtensions.Contains(ext))
+            return BadRequest(new { error = new { message = $"不允許的副檔名：{ext}" } });
+
+        var fileName = $"{Guid.NewGuid():N}{ext}";
+        var folder = Path.Combine(_env.WebRootPath, "uploads", "images");
+        Directory.CreateDirectory(folder);
+        var fullPath = Path.Combine(folder, fileName);
+
+        await using var fs = System.IO.File.Create(fullPath);
+        await upload.CopyToAsync(fs);
+
+        return Ok(new { url = $"/uploads/images/{fileName}" });
     }
 }
