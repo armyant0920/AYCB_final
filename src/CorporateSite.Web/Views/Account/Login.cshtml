@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "後台登入";
+    Layout = "_Layout";
+}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="card-title text-center mb-4">後台登入</h4>
+                <form asp-controller="Account" asp-action="Login"
+                      asp-route-returnUrl="@ViewBag.ReturnUrl" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 mb-3"></div>
+                    <div class="mb-3">
+                        <label class="form-label">帳號</label>
+                        <input type="text" name="userName" class="form-control"
+                               autocomplete="username" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">密碼</label>
+                        <input type="password" name="password" class="form-control"
+                               autocomplete="current-password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">登入</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+@{ ViewData["Title"] = "Dashboard"; }
+<h2 class="mb-4">後台管理</h2>
+<p class="text-muted">歡迎，@User.Identity?.Name。</p>
+<div class="row g-3 mt-1">
+    <div class="col-md-3">
+        <a asp-area="Admin" asp-controller="News" asp-action="Edit" class="btn btn-primary w-100">
+            ＋ 新增消息
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a asp-area="Admin" asp-controller="News" asp-action="Index" class="btn btn-outline-secondary w-100">
+            管理最新消息
+        </a>
+    </div>
+</div>

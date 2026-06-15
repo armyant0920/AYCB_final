@@ -1,0 +1,22 @@
+@model CorporateSite.Domain.Entities.News
+@{
+    ViewData["Title"] = Model.Title;
+}
+<article class="news-detail">
+    <header class="mb-4">
+        <span class="badge bg-secondary">@Model.Category</span>
+        <h1 class="mt-2">@Model.Title</h1>
+        <p class="text-muted small">發布日期：@Model.PublishedAt?.ToString("yyyy-MM-dd")</p>
+        @if (!string.IsNullOrEmpty(Model.Summary))
+        {
+            <p class="lead border-start border-3 ps-3 text-muted">@Model.Summary</p>
+        }
+        <hr />
+    </header>
+    <div class="news-body">
+        @Html.Raw(Model.BodyHtml)
+    </div>
+</article>
+<div class="mt-4">
+    <a asp-controller="News" asp-action="Index" class="btn btn-outline-secondary">← 返回列表</a>
+</div>

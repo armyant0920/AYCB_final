@@ -1,0 +1,74 @@
+@model CorporateSite.Web.ViewModels.News.NewsEditViewModel
+@{ ViewData["Title"] = Model.NewsId == null ? "新增消息" : "編輯消息"; }
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-area="Admin" asp-controller="News" asp-action="Edit" method="post" class="mt-3">
+    @Html.AntiForgeryToken()
+    @if (Model.NewsId.HasValue)
+    {
+        <input type="hidden" asp-for="NewsId" />
+    }
+
+    <div asp-validation-summary="All" class="alert alert-danger py-2 mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label fw-semibold">標題 <span class="text-danger">*</span></label>
+        <input asp-for="Title" class="form-control" placeholder="請輸入標題" />
+        <span asp-validation-for="Title" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Summary" class="form-label fw-semibold">摘要</label>
+        <textarea asp-for="Summary" class="form-control" rows="2" placeholder="簡短描述（選填）"></textarea>
+        <span asp-validation-for="Summary" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Category" class="form-label fw-semibold">分類</label>
+        <select asp-for="Category" class="form-select">
+            <option value="CompanyNews">公司新聞</option>
+            <option value="ESG">ESG</option>
+            <option value="Announcement">公告</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BodyHtml" class="form-label fw-semibold">內容</label>
+        <textarea asp-for="BodyHtml" id="editor" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-4 form-check">
+        <input asp-for="Publish" class="form-check-input" type="checkbox" />
+        <label asp-for="Publish" class="form-check-label">立即發佈（取消勾選則存為草稿）</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">儲存</button>
+    <a asp-area="Admin" asp-controller="News" asp-action="Index" class="btn btn-outline-secondary ms-2">取消</a>
+</form>
+
+@section Scripts {
+<script src="~/lib/ckeditor5/ckeditor.js"></script>
+<script>
+(function () {
+    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+    const textarea = document.querySelector('#editor');
+
+    ClassicEditor
+        .create(textarea, {
+            simpleUpload: {
+                uploadUrl: '@Url.Action("Image", "Upload", new { area = "Admin" })',
+                headers: {
+                    'RequestVerificationToken': token
+                }
+            }
+        })
+        .then(editor => {
+            document.querySelector('form').addEventListener('submit', function () {
+                textarea.value = editor.getData();
+            });
+        })
+        .catch(err => console.error('CKEditor init error:', err));
+})();
+</script>
+}

@@ -1,0 +1,30 @@
+/* ===== 公開頁面樣式 — 由美工維護此檔案 ===== */
+
+body {
+    font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+}
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.site-footer {
+}
+
+/* 新聞內容區：圖片自適應寬度 */
+.news-body img {
+    max-width: 100%;
+    height: auto;
+}
+
+.news-body figure {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.news-body figcaption {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
