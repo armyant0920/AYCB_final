@@ -12,10 +12,3 @@
 *.user
 appsettings.*.Local.json
 **/secrets.json
-
-# .NET
-**/bin/
-**/obj/
-*.user
-appsettings.*.Local.json
-**/secrets.json
