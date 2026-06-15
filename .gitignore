@@ -12,3 +12,4 @@
 *.user
 appsettings.*.Local.json
 **/secrets.json
+.claude/
