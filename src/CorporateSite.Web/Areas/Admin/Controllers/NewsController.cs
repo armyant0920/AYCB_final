@@ -1,12 +1,10 @@
 using CorporateSite.Web.Services;
 using CorporateSite.Web.ViewModels.News;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CorporateSite.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = "Admin,Editor")]
 public class NewsController : Controller
 {
     private readonly NewsApiClient _api;

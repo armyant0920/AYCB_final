@@ -22,14 +22,7 @@
                     <a class="nav-link" asp-controller="News" asp-action="Index" asp-route-category="ESG">ESG</a>
                 </li>
             </ul>
-            @if (User.Identity?.IsAuthenticated == true)
-            {
-                <span class="navbar-text me-3 small text-muted">@User.Identity.Name</span>
-                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-secondary btn-sm">登出</button>
-                </form>
-            }
+            <!-- 登入/登出：認證功能待後續加入 -->
         </div>
     </nav>
 </header>

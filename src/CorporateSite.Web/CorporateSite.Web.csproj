@@ -5,8 +5,5 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>corp-site-web-secrets</UserSecretsId>
   </PropertyGroup>
-  <ItemGroup>
-    <!-- 帳號登入暫時用本地 PasswordHasher，待介接員工系統後移除 -->
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.0" />
-  </ItemGroup>
+  <!-- 暫無額外 NuGet 套件，認證功能待後續加入 -->
 </Project>

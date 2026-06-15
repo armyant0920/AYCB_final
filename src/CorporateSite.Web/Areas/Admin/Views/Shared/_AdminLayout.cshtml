@@ -11,13 +11,7 @@
 <body>
     <nav class="navbar navbar-dark bg-dark px-3">
         <span class="navbar-brand mb-0 h5">後台管理</span>
-        <div class="d-flex align-items-center gap-3">
-            <span class="text-light small">@User.Identity?.Name</span>
-            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-sm btn-outline-light">登出</button>
-            </form>
-        </div>
+        <!-- 登入/登出：認證功能待後續加入 -->
     </nav>
     <div class="container-fluid">
         <div class="row">
