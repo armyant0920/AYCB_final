@@ -1,6 +1,7 @@
-@model List<CorporateSite.Web.Models.NewsDto>
+@model CorporateSite.Web.Models.PagedResult<CorporateSite.Web.Models.NewsDto>
 @{
     ViewData["Title"] = "最新消息";
+    string? cat = ViewBag.Category;
 }
 
 <div class="container py-5">
@@ -8,24 +9,24 @@
 
     <div class="mb-4">
         <a asp-controller="News" asp-action="Index"
-           class="btn btn-sm @(ViewBag.Category == null ? "btn-primary" : "btn-outline-secondary") me-1">
+           class="btn btn-sm @(cat == null ? "btn-primary" : "btn-outline-secondary") me-1">
             <i class="fa fa-list me-1"></i>全部
         </a>
         <a asp-controller="News" asp-action="Index" asp-route-category="CompanyNews"
-           class="btn btn-sm @(ViewBag.Category == "CompanyNews" ? "btn-primary" : "btn-outline-secondary") me-1">
+           class="btn btn-sm @(cat == "CompanyNews" ? "btn-primary" : "btn-outline-secondary") me-1">
             <i class="fa fa-building me-1"></i>公司新聞
         </a>
         <a asp-controller="News" asp-action="Index" asp-route-category="ESG"
-           class="btn btn-sm @(ViewBag.Category == "ESG" ? "btn-primary" : "btn-outline-secondary") me-1">
+           class="btn btn-sm @(cat == "ESG" ? "btn-primary" : "btn-outline-secondary") me-1">
             <i class="fa fa-leaf me-1"></i>ESG
         </a>
         <a asp-controller="News" asp-action="Index" asp-route-category="Announcement"
-           class="btn btn-sm @(ViewBag.Category == "Announcement" ? "btn-primary" : "btn-outline-secondary")">
+           class="btn btn-sm @(cat == "Announcement" ? "btn-primary" : "btn-outline-secondary")">
             <i class="fa fa-bullhorn me-1"></i>公告
         </a>
     </div>
 
-    @if (!Model.Any())
+    @if (!Model.Items.Any())
     {
         <div class="text-center py-5">
             <i class="fa fa-inbox fa-3x text-muted mb-3 d-block"></i>
@@ -35,7 +36,7 @@
     else
     {
         <div class="row g-4">
-            @foreach (var item in Model)
+            @foreach (var item in Model.Items)
             {
                 <div class="col-md-6 col-lg-4">
                     <div class="card news-card h-100">
@@ -58,5 +59,35 @@
                 </div>
             }
         </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="mt-5" aria-label="分頁導覽">
+                <ul class="pagination justify-content-center">
+                    @if (Model.Page > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="News" asp-action="Index"
+                               asp-route-page="@(Model.Page - 1)" asp-route-category="@cat">«</a>
+                        </li>
+                    }
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                            <a class="page-link" asp-controller="News" asp-action="Index"
+                               asp-route-page="@i" asp-route-category="@cat">@i</a>
+                        </li>
+                    }
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="News" asp-action="Index"
+                               asp-route-page="@(Model.Page + 1)" asp-route-category="@cat">»</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+            <p class="text-center text-muted small">共 @Model.TotalCount 則消息，第 @Model.Page / @Model.TotalPages 頁</p>
+        }
     }
 </div>
