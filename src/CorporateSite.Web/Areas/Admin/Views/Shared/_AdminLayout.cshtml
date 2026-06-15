@@ -11,7 +11,9 @@
 <body>
     <nav class="navbar navbar-dark bg-dark px-3">
         <span class="navbar-brand mb-0 h5">後台管理</span>
-        <!-- 登入/登出：認證功能待後續加入 -->
+        <a href="/" class="btn btn-sm btn-outline-light ms-auto" target="_blank">
+            <i class="bi bi-box-arrow-up-right me-1"></i>查看網站
+        </a>
     </nav>
     <div class="container-fluid">
         <div class="row">
@@ -19,12 +21,13 @@
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                            Dashboard
+                            🏠 Dashboard
                         </a>
                     </li>
+                    <li class="nav-section">內容管理</li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="Admin" asp-controller="News" asp-action="Index">
-                            最新消息
+                            📰 最新消息
                         </a>
                     </li>
                 </ul>

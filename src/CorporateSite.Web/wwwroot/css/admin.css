@@ -2,3 +2,27 @@
 .sidebar {
     border-right: 1px solid #dee2e6;
 }
+
+.sidebar .nav-link {
+    color: #333;
+    border-radius: .375rem;
+    padding: .45rem 1rem;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: #e9ecef;
+    color: #1a3c6e;
+}
+
+.sidebar .nav-section {
+    font-size: .72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #999;
+    padding: 1rem 1rem .25rem;
+}
+
+.table th { font-size: .85rem; }
+.table td { font-size: .9rem; vertical-align: middle; }

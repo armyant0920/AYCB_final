@@ -16,8 +16,12 @@
             <i class="fa fa-building me-1"></i>公司新聞
         </a>
         <a asp-controller="News" asp-action="Index" asp-route-category="ESG"
-           class="btn btn-sm @(ViewBag.Category == "ESG" ? "btn-primary" : "btn-outline-secondary")">
+           class="btn btn-sm @(ViewBag.Category == "ESG" ? "btn-primary" : "btn-outline-secondary") me-1">
             <i class="fa fa-leaf me-1"></i>ESG
+        </a>
+        <a asp-controller="News" asp-action="Index" asp-route-category="Announcement"
+           class="btn btn-sm @(ViewBag.Category == "Announcement" ? "btn-primary" : "btn-outline-secondary")">
+            <i class="fa fa-bullhorn me-1"></i>公告
         </a>
     </div>
 
