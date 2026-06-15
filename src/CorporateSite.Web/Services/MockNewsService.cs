@@ -1,3 +1,4 @@
+using CorporateSite.Web.Infrastructure;
 using CorporateSite.Web.Models;
 
 namespace CorporateSite.Web.Services;
@@ -61,9 +62,9 @@ public class MockNewsService : INewsService
         _store.Add(new NewsDto
         {
             NewsId = ++_nextId,
-            Title = req.Title,
-            Summary = req.Summary,
-            BodyHtml = req.BodyHtml,
+            Title = req.Title.Trim(),
+            Summary = req.Summary?.Trim() ?? "",
+            BodyHtml = BasicHtmlSanitizer.Sanitize(req.BodyHtml),
             Category = req.Category,
             Language = req.Language,
             Status = req.Publish ? 1 : 0,
@@ -77,9 +78,9 @@ public class MockNewsService : INewsService
         var item = _store.FirstOrDefault(n => n.NewsId == id);
         if (item == null) return Task.FromResult((false, "找不到資料"));
 
-        item.Title = req.Title;
-        item.Summary = req.Summary;
-        item.BodyHtml = req.BodyHtml;
+        item.Title = req.Title.Trim();
+        item.Summary = req.Summary?.Trim() ?? "";
+        item.BodyHtml = BasicHtmlSanitizer.Sanitize(req.BodyHtml);
         item.Category = req.Category;
         item.Language = req.Language;
         item.Status = req.Publish ? 1 : 0;

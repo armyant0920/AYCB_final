@@ -1,3 +1,4 @@
+using CorporateSite.Api.Infrastructure;
 using CorporateSite.Api.Models;
 using CorporateSite.Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +13,7 @@ public class NewsController : ControllerBase
 
     public NewsController(NewsRepository repo) => _repo = repo;
 
-    // TODO: 確認環境中可用的 HtmlSanitizer 套件後替換
-    private static string SanitizeHtml(string html) => html;
+    private static string SanitizeHtml(string html) => BasicHtmlSanitizer.Sanitize(html);
 
     [HttpGet("published")]
     public IActionResult GetPublished([FromQuery] string? category, [FromQuery] string? language,
