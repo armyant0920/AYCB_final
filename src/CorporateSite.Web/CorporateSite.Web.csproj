@@ -3,10 +3,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>corp-site-dev-secrets</UserSecretsId>
+    <UserSecretsId>corp-site-web-secrets</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CorporateSite.Application\CorporateSite.Application.csproj" />
-    <ProjectReference Include="..\CorporateSite.Infrastructure\CorporateSite.Infrastructure.csproj" />
+    <!-- 帳號登入暫時用本地 PasswordHasher，待介接員工系統後移除 -->
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.9" />
   </ItemGroup>
 </Project>

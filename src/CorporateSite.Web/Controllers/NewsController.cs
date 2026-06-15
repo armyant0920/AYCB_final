@@ -1,23 +1,23 @@
-using CorporateSite.Application.Services;
+using CorporateSite.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CorporateSite.Web.Controllers;
 
 public class NewsController : Controller
 {
-    private readonly NewsService _newsService;
-    public NewsController(NewsService newsService) => _newsService = newsService;
+    private readonly NewsApiClient _api;
+    public NewsController(NewsApiClient api) => _api = api;
 
-    public IActionResult Index(string? category)
+    public async Task<IActionResult> Index(string? category)
     {
-        var news = _newsService.GetPublished(category, top: 20);
+        var news = await _api.GetPublishedAsync(category);
         ViewBag.Category = category;
         return View(news);
     }
 
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
-        var news = _newsService.GetById(id);
+        var news = await _api.GetByIdAsync(id);
         if (news == null) return NotFound();
         return View(news);
     }

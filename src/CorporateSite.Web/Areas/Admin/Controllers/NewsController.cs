@@ -1,6 +1,4 @@
-using CorporateSite.Application.Dtos;
-using CorporateSite.Application.Services;
-using CorporateSite.Domain.Enums;
+using CorporateSite.Web.Services;
 using CorporateSite.Web.ViewModels.News;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,21 +9,21 @@ namespace CorporateSite.Web.Areas.Admin.Controllers;
 [Authorize(Roles = "Admin,Editor")]
 public class NewsController : Controller
 {
-    private readonly NewsService _newsService;
-    public NewsController(NewsService newsService) => _newsService = newsService;
+    private readonly NewsApiClient _api;
+    public NewsController(NewsApiClient api) => _api = api;
 
-    public IActionResult Index(int page = 1)
+    public async Task<IActionResult> Index(int page = 1)
     {
-        var result = _newsService.GetList(page, pageSize: 20);
+        var result = await _api.GetListAsync(page, pageSize: 20);
         return View(result);
     }
 
     [HttpGet]
-    public IActionResult Edit(int? id)
+    public async Task<IActionResult> Edit(int? id)
     {
         if (id == null) return View(new NewsEditViewModel());
 
-        var news = _newsService.GetById(id.Value);
+        var news = await _api.GetByIdAsync(id.Value);
         if (news == null) return NotFound();
 
         return View(new NewsEditViewModel
@@ -35,39 +33,39 @@ public class NewsController : Controller
             Summary = news.Summary,
             BodyHtml = news.BodyHtml,
             Category = news.Category,
-            Publish = news.Status == PublishStatus.Published,
+            Publish = news.Status == 1,
         });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(NewsEditViewModel vm)
+    public async Task<IActionResult> Edit(NewsEditViewModel vm)
     {
         if (!ModelState.IsValid) return View(vm);
 
-        var dto = new NewsEditDto
+        var req = new NewsEditRequest
         {
             Title = vm.Title,
             Summary = vm.Summary,
             BodyHtml = vm.BodyHtml,
             Category = vm.Category,
             Publish = vm.Publish,
+            CreatedBy = User.Identity?.Name ?? "system",
         };
 
-        var userName = User.Identity?.Name ?? "system";
         if (vm.NewsId == null)
-            _newsService.Create(dto, userName);
+            await _api.CreateAsync(req);
         else
-            _newsService.Update(vm.NewsId.Value, dto);
+            await _api.UpdateAsync(vm.NewsId.Value, req);
 
         return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        _newsService.Delete(id);
+        await _api.DeleteAsync(id);
         return RedirectToAction(nameof(Index));
     }
 }

@@ -1,4 +1,4 @@
-@model CorporateSite.Domain.Common.PagedResult<CorporateSite.Domain.Entities.News>
+@model CorporateSite.Web.Models.PagedResult<CorporateSite.Web.Models.NewsDto>
 @{ ViewData["Title"] = "最新消息管理"; }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -8,13 +8,7 @@
 
 <table class="table table-hover align-middle">
     <thead class="table-light">
-        <tr>
-            <th>標題</th>
-            <th>分類</th>
-            <th>狀態</th>
-            <th>發佈時間</th>
-            <th style="width:130px"></th>
-        </tr>
+        <tr><th>標題</th><th>分類</th><th>狀態</th><th>發佈時間</th><th style="width:130px"></th></tr>
     </thead>
     <tbody>
         @foreach (var n in Model.Items)
@@ -23,9 +17,8 @@
                 <td>@n.Title</td>
                 <td>@n.Category</td>
                 <td>
-                    <span class="badge @(n.Status == CorporateSite.Domain.Enums.PublishStatus.Published
-                        ? "bg-success" : "bg-warning text-dark")">
-                        @n.Status
+                    <span class="badge @(n.Status == 1 ? "bg-success" : "bg-warning text-dark")">
+                        @(n.Status == 1 ? "已發佈" : "草稿")
                     </span>
                 </td>
                 <td class="small text-muted">@n.PublishedAt?.ToString("yyyy-MM-dd")</td>
@@ -47,15 +40,13 @@
 
 @if (Model.TotalPages > 1)
 {
-    <nav>
-        <ul class="pagination">
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(i == Model.Page ? "active" : "")">
-                    <a class="page-link" asp-area="Admin" asp-controller="News" asp-action="Index"
-                       asp-route-page="@i">@i</a>
-                </li>
-            }
-        </ul>
-    </nav>
+    <nav><ul class="pagination">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Page ? "active" : "")">
+                <a class="page-link" asp-area="Admin" asp-controller="News"
+                   asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+    </ul></nav>
 }

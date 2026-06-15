@@ -1,11 +1,12 @@
-@model IReadOnlyList<CorporateSite.Domain.Entities.News>
+@model List<CorporateSite.Web.Models.NewsDto>
 @{
     ViewData["Title"] = "最新消息";
 }
 <h1 class="mb-4">最新消息</h1>
 
 <div class="mb-3">
-    <a asp-controller="News" asp-action="Index" class="btn btn-sm @(ViewBag.Category == null ? "btn-primary" : "btn-outline-secondary")">全部</a>
+    <a asp-controller="News" asp-action="Index"
+       class="btn btn-sm @(ViewBag.Category == null ? "btn-primary" : "btn-outline-secondary")">全部</a>
     <a asp-controller="News" asp-action="Index" asp-route-category="CompanyNews"
        class="btn btn-sm @(ViewBag.Category == "CompanyNews" ? "btn-primary" : "btn-outline-secondary")">公司新聞</a>
     <a asp-controller="News" asp-action="Index" asp-route-category="ESG"
@@ -27,9 +28,7 @@ else
                         <span class="badge bg-secondary mb-2">@item.Category</span>
                         <h5 class="card-title">
                             <a asp-controller="News" asp-action="Details" asp-route-id="@item.NewsId"
-                               class="text-decoration-none text-dark stretched-link">
-                                @item.Title
-                            </a>
+                               class="text-decoration-none text-dark stretched-link">@item.Title</a>
                         </h5>
                         <p class="card-text text-muted small">@item.Summary</p>
                     </div>

@@ -1,15 +1,16 @@
 using System.Security.Claims;
-using CorporateSite.Application.Abstractions.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CorporateSite.Web.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly IUserAuthenticator _authenticator;
-    public AccountController(IUserAuthenticator authenticator) => _authenticator = authenticator;
+    private readonly IConfiguration _config;
+
+    public AccountController(IConfiguration config) => _config = config;
 
     [HttpGet]
     public IActionResult Login(string? returnUrl)
@@ -22,20 +23,29 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(string userName, string password, string? returnUrl)
     {
-        var result = _authenticator.ValidateCredentials(userName, password);
-        if (!result.Success)
+        // 暫時用 appsettings AdminCredentials 驗證，待介接員工系統 API 後替換此段
+        var cfgUser = _config["AdminCredentials:UserName"];
+        var cfgHash = _config["AdminCredentials:PasswordHash"];
+        var cfgRoles = _config["AdminCredentials:Roles"] ?? "Admin,Editor";
+
+        bool valid = false;
+        if (!string.IsNullOrEmpty(cfgUser) && !string.IsNullOrEmpty(cfgHash)
+            && string.Equals(userName, cfgUser, StringComparison.OrdinalIgnoreCase))
         {
-            ModelState.AddModelError("", result.ErrorMessage ?? "登入失敗");
+            var result = new PasswordHasher<object>().VerifyHashedPassword(null!, cfgHash, password);
+            valid = result != PasswordVerificationResult.Failed;
+        }
+
+        if (!valid)
+        {
+            ModelState.AddModelError("", "帳號或密碼錯誤");
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, result.UserName),
-            new("DisplayName", result.DisplayName)
-        };
-        claims.AddRange(result.Roles.Select(r => new Claim(ClaimTypes.Role, r)));
+        var claims = new List<Claim> { new(ClaimTypes.Name, userName) };
+        claims.AddRange(cfgRoles.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(r => new Claim(ClaimTypes.Role, r)));
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));

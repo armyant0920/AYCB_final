@@ -1,56 +1,52 @@
-using CorporateSite.Application;
-using CorporateSite.Infrastructure;
 using CorporateSite.Web.Infrastructure;
+using CorporateSite.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Services ──────────────────────────────────────────────────────────────────
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
-
-builder.Services.AddControllersWithViews(options =>
+builder.Services.AddControllersWithViews(o =>
 {
-    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+    o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 });
 
-builder.Services.AddAntiforgery(options =>
+builder.Services.AddAntiforgery(o =>
 {
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.Strict;
-    options.HeaderName = "RequestVerificationToken";
+    o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    o.Cookie.HttpOnly = true;
+    o.Cookie.SameSite = SameSiteMode.Strict;
+    o.HeaderName = "RequestVerificationToken";
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+    .AddCookie(o =>
     {
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/Denied";
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
-        options.SlidingExpiration = true;
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.Lax;
-        options.Cookie.Name = "__Host-corp.auth";
+        o.LoginPath = "/Account/Login";
+        o.AccessDeniedPath = "/Account/Denied";
+        o.ExpireTimeSpan = TimeSpan.FromHours(8);
+        o.SlidingExpiration = true;
+        o.Cookie.HttpOnly = true;
+        o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        o.Cookie.SameSite = SameSiteMode.Lax;
+        o.Cookie.Name = "__Host-corp.auth";
     });
 
 builder.Services.AddAuthorization();
 
-builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(o =>
+// Api client — BaseAddress 從 appsettings 讀取
+builder.Services.AddHttpClient<NewsApiClient>(client =>
 {
-    o.MultipartBodyLengthLimit = 209_715_200;
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7001");
 });
-builder.WebHost.ConfigureKestrel(k => k.Limits.MaxRequestBodySize = 209_715_200);
 
 if (!builder.Environment.IsDevelopment())
 {
-    builder.Services.AddHsts(options =>
+    builder.Services.AddHsts(o =>
     {
-        options.MaxAge = TimeSpan.FromDays(365);
-        options.IncludeSubDomains = true;
-        options.Preload = true;
+        o.MaxAge = TimeSpan.FromDays(365);
+        o.IncludeSubDomains = true;
+        o.Preload = true;
     });
 }
 
@@ -70,12 +66,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute("areas", "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
