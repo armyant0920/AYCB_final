@@ -1,5 +1,6 @@
 using CorporateSite.Api.Models;
 using CorporateSite.Api.Repositories;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CorporateSite.Api.Controllers;
@@ -9,11 +10,11 @@ namespace CorporateSite.Api.Controllers;
 public class NewsController : ControllerBase
 {
     private readonly NewsRepository _repo;
+    private static readonly HtmlSanitizer Sanitizer = new();
 
     public NewsController(NewsRepository repo) => _repo = repo;
 
-    // TODO: 取得 HtmlSanitizer 正確套件 ID 後，將此方法換成真正的淨化實作
-    private static string SanitizeHtml(string html) => html;
+    private static string SanitizeHtml(string html) => Sanitizer.Sanitize(html);
 
     [HttpGet("published")]
     public IActionResult GetPublished([FromQuery] string? category, [FromQuery] int top = 20)

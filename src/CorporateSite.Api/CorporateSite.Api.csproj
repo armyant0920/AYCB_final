@@ -8,6 +8,6 @@
   <ItemGroup>
     <!-- DataProviderInfrastructure 2.0.27 — 請加入本地 NuGet 來源後 restore -->
     <PackageReference Include="DataProviderInfrastructure" Version="2.0.27" />
-    <!-- TODO: 加入 HtmlSanitizer 套件後，將 NewsController 的 SanitizeHtml 換成真正的淨化實作 -->
+    <PackageReference Include="HtmlSanitizer.NetCore3.1" Version="1.0.0" />
   </ItemGroup>
 </Project>
