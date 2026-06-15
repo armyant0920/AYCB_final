@@ -8,12 +8,21 @@ builder.Services.AddControllersWithViews(o =>
 {
     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 });
+builder.Services.AddAntiforgery(o => o.HeaderName = "RequestVerificationToken");
 
-// Api client — BaseAddress 從 appsettings 讀取
-builder.Services.AddHttpClient<NewsApiClient>(client =>
+// 切換 Mock / 真實 Api：appsettings.Development.json 設 "UseMockData": true 即可不需 DB
+if (builder.Configuration.GetValue<bool>("UseMockData"))
 {
-    client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7001");
-});
+    builder.Services.AddSingleton<INewsService, MockNewsService>();
+}
+else
+{
+    builder.Services.AddHttpClient<NewsApiClient>(client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7001");
+    });
+    builder.Services.AddScoped<INewsService>(sp => sp.GetRequiredService<NewsApiClient>());
+}
 
 if (!builder.Environment.IsDevelopment())
 {

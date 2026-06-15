@@ -7,8 +7,8 @@ namespace CorporateSite.Web.Areas.Admin.Controllers;
 [Area("Admin")]
 public class NewsController : Controller
 {
-    private readonly NewsApiClient _api;
-    public NewsController(NewsApiClient api) => _api = api;
+    private readonly INewsService _api;
+    public NewsController(INewsService api) => _api = api;
 
     public async Task<IActionResult> Index(int page = 1, string? category = null, string? language = null)
     {

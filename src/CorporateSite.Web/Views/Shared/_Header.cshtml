@@ -1,28 +1,150 @@
 <!-- ===== Header：由美工維護此檔案與 wwwroot/css/site.css ===== -->
-<header class="site-header bg-white border-bottom shadow-sm">
-    <nav class="navbar navbar-expand-lg navbar-light container">
-        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-            <img src="~/images/logo.png" alt="企業 Logo" height="40"
-                 onerror="this.style.display='none'" />
-            <span class="fw-bold">企業官網</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Home" asp-action="Index">首頁</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="News" asp-action="Index">最新消息</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="News" asp-action="Index" asp-route-category="ESG">ESG</a>
-                </li>
-            </ul>
-            <!-- 登入/登出：認證功能待後續加入 -->
+<header id="header" class="site-header">
+    <div class="header-inner">
+
+        <!-- Logo -->
+        <div class="logo">
+            <a asp-controller="Home" asp-action="Index" title="企業官網">
+                <img src="~/images/logo.png" alt="企業官網" onerror="this.style.display='none'" />
+            </a>
         </div>
-    </nav>
+
+        <!-- Top bar：搜尋 / 聯絡我們 / 語系 -->
+        <div class="top_info">
+            <ul class="top_search_box">
+                <form action="#" method="get">
+                    <input type="text" name="q" placeholder="搜尋" accesskey="S" />
+                    <input type="submit" value="搜尋" class="btn" title="搜尋" />
+                </form>
+            </ul>
+            <ul>
+                <li><a href="#" title="聯絡我們">聯絡我們</a></li>
+            </ul>
+            <ul class="languages">
+                <li><a href="#" hreflang="zh-CN" title="简体中文">简体中文</a></li>
+                <li><a href="#" hreflang="en" title="English">English</a></li>
+            </ul>
+        </div>
+
+        <!-- 主選單 -->
+        <ul class="menu">
+
+            <li>
+                <a href="#" title="關於我們"><span>關於我們</span></a>
+                <ul>
+                    <li><a href="#" title="公司簡介">公司簡介</a></li>
+                    <li><a href="#" title="願景與使命">願景與使命</a></li>
+                    <li><a href="#" title="企業核心價值與經營理念">企業核心價值與經營理念</a></li>
+                    <li><a href="#" title="公司沿革">公司沿革</a></li>
+                    <li><a href="#" title="組織架構">組織架構</a></li>
+                    <li><a href="#" title="服務據點">服務據點</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" title="技術與服務"><span>技術與服務</span></a>
+                <ul>
+                    <li><a href="#" title="All in House 服務">All in House 服務</a></li>
+                    <li><a href="#" title="PI &amp; SI">PI &amp; SI</a></li>
+                    <li><a href="#" title="高頻高速解決方案">高頻高速解決方案</a></li>
+                    <li><a href="#" title="探針卡解決方案">探針卡解決方案</a></li>
+                    <li><a href="#" title="製程能力">製程能力</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" title="產品介紹"><span>產品介紹</span></a>
+                <ul>
+                    <li><a href="#" title="產品快訊">產品快訊</a></li>
+                    <li><a href="#" title="市場應用">市場應用</a></li>
+                    <li><a href="#" title="探針卡">探針卡</a></li>
+                    <li><a href="#" title="IC測試板">IC測試板</a></li>
+                    <li><a href="#" title="產品平台">產品平台</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" title="投資人專區"><span>投資人專區</span></a>
+                <ul>
+                    <li><a href="#" title="營運說明會">營運說明會</a></li>
+                    <li><a href="#" title="財務資訊">財務資訊</a>
+                        <ul>
+                            <li><a href="#" title="公司基本資料">公司基本資料</a></li>
+                            <li><a href="#" title="每月營收報告">每月營收報告</a></li>
+                            <li><a href="#" title="每季財務報告">每季財務報告</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" title="公司治理">公司治理</a>
+                        <ul>
+                            <li><a href="#" title="董事會">董事會</a></li>
+                            <li><a href="#" title="委員會">委員會</a></li>
+                            <li><a href="#" title="內部稽核">內部稽核</a></li>
+                            <li><a href="#" title="風險管理">風險管理</a></li>
+                            <li><a href="#" title="公司重要規章">公司重要規章</a></li>
+                            <li><a href="#" title="經營團隊">經營團隊</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" title="股東專欄">股東專欄</a>
+                        <ul>
+                            <li><a href="#" title="股東會">股東會</a></li>
+                            <li><a href="#" title="歷年股利分派">歷年股利分派</a></li>
+                            <li><a href="#" title="聯絡人">聯絡人</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" title="問答集">問答集</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a asp-controller="News" asp-action="Index" asp-route-category="ESG" title="ESG永續管理">
+                    <span>ESG永續管理</span>
+                </a>
+                <ul>
+                    <li><a href="#" title="永續發展">永續發展</a>
+                        <ul>
+                            <li><a href="#" title="永續發展委員會">永續發展委員會</a></li>
+                            <li><a href="#" title="重大性議題風險評估及管理策略">重大性議題風險評估及管理策略</a></li>
+                            <li><a href="#" title="利害關係人">利害關係人</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" title="誠信經營">誠信經營</a></li>
+                    <li><a href="#" title="創新與服務">創新與服務</a></li>
+                    <li><a href="#" title="供應鏈">供應鏈</a></li>
+                    <li><a href="#" title="綠色智造">綠色智造</a></li>
+                    <li><a href="#" title="包容職場">包容職場</a></li>
+                    <li><a href="#" title="社會共好">社會共好</a></li>
+                    <li><a href="#" title="永續報告書">永續報告書</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" title="人才召募"><span>人才召募</span></a>
+                <ul>
+                    <li><a href="#" title="選擇我們">選擇我們</a></li>
+                    <li><a href="#" title="熱門職缺">熱門職缺</a></li>
+                    <li><a href="#" title="召募流程">召募流程</a></li>
+                    <li><a href="#" title="員工訓練">員工訓練</a></li>
+                    <li><a href="#" title="員工福利">員工福利</a></li>
+                </ul>
+            </li>
+
+            <li class="last">
+                <a asp-controller="News" asp-action="Index" title="新聞中心">
+                    <span>新聞中心</span>
+                </a>
+                <ul>
+                    <li><a asp-controller="News" asp-action="Index" title="最新消息">最新消息</a></li>
+                    <li><a asp-controller="News" asp-action="Index" asp-route-category="ESG" title="ESG消息">ESG消息</a></li>
+                    <li><a asp-controller="News" asp-action="Index" asp-route-category="Announcement" title="公告">公告</a></li>
+                </ul>
+            </li>
+
+        </ul>
+
+        <!-- 手機漢堡按鈕 -->
+        <button class="menu-toggle" aria-label="開啟選單" type="button">
+            <span></span><span></span><span></span>
+        </button>
+
+    </div>
 </header>

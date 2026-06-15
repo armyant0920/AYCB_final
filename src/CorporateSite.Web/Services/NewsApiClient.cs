@@ -3,7 +3,7 @@ using CorporateSite.Web.Models;
 
 namespace CorporateSite.Web.Services;
 
-public class NewsApiClient
+public class NewsApiClient : INewsService
 {
     private readonly HttpClient _http;
     private readonly ILogger<NewsApiClient> _logger;

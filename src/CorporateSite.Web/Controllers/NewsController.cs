@@ -1,4 +1,4 @@
-using CorporateSite.Web.Services;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace CorporateSite.Web.Controllers;
@@ -6,7 +6,7 @@ namespace CorporateSite.Web.Controllers;
 public class NewsController : Controller
 {
     private readonly NewsApiClient _api;
-    public NewsController(NewsApiClient api) => _api = api;
+    public NewsController(INewsService api) => _api = api;
 
     public async Task<IActionResult> Index(string? category)
     {

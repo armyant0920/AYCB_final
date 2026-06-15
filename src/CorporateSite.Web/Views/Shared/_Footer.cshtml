@@ -1,21 +1,81 @@
-<!-- ===== Footer：由美工維護此檔案 ===== -->
-<footer class="site-footer bg-dark text-light py-4 mt-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <p class="mb-1 fw-semibold">企業名稱</p>
-                <p class="mb-0 small text-muted">地址：請填入公司地址</p>
-            </div>
-            <div class="col-md-6 text-md-end">
-                <p class="mb-1 small">
-                    <a href="#" class="text-muted text-decoration-none me-3">隱私權政策</a>
-                    <a href="#" class="text-muted text-decoration-none">聯絡我們</a>
-                </p>
-                <p class="mb-0 small text-muted">
-                    © <span id="footer-year"></span> 企業名稱。版權所有。
-                </p>
-            </div>
-        </div>
+<!-- ===== Footer：由美工維護此檔案與 wwwroot/css/site.css ===== -->
+<footer id="footer">
+    <ul class="footer_menu">
+        <li>
+            <a href="#" title="關於我們">關於我們</a>
+            <ul>
+                <li><a href="#" title="公司簡介">公司簡介</a></li>
+                <li><a href="#" title="願景與使命">願景與使命</a></li>
+                <li><a href="#" title="企業核心價值與經營理念">企業核心價值與經營理念</a></li>
+                <li><a href="#" title="公司沿革">公司沿革</a></li>
+                <li><a href="#" title="組織架構">組織架構</a></li>
+                <li><a href="#" title="服務據點">服務據點</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" title="技術與服務">技術與服務</a>
+            <ul>
+                <li><a href="#" title="All in House 服務">All in House 服務</a></li>
+                <li><a href="#" title="PI &amp; SI">PI &amp; SI</a></li>
+                <li><a href="#" title="高頻高速解決方案">高頻高速解決方案</a></li>
+                <li><a href="#" title="探針卡解決方案">探針卡解決方案</a></li>
+                <li><a href="#" title="製程能力">製程能力</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" title="產品介紹">產品介紹</a>
+            <ul>
+                <li><a href="#" title="產品快訊">產品快訊</a></li>
+                <li><a href="#" title="市場應用">市場應用</a></li>
+                <li><a href="#" title="探針卡">探針卡</a></li>
+                <li><a href="#" title="IC測試板">IC測試板</a></li>
+                <li><a href="#" title="產品平台">產品平台</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" title="投資人專區">投資人專區</a>
+            <ul>
+                <li><a href="#" title="營運說明會">營運說明會</a></li>
+                <li><a href="#" title="財務資訊">財務資訊</a></li>
+                <li><a href="#" title="公司治理">公司治理</a></li>
+                <li><a href="#" title="股東專欄">股東專欄</a></li>
+                <li><a href="#" title="問答集">問答集</a></li>
+            </ul>
+        </li>
+        <li>
+            <a asp-controller="News" asp-action="Index" asp-route-category="ESG" title="ESG永續管理">ESG永續管理</a>
+            <ul>
+                <li><a href="#" title="永續發展">永續發展</a></li>
+                <li><a href="#" title="誠信經營">誠信經營</a></li>
+                <li><a href="#" title="創新與服務">創新與服務</a></li>
+                <li><a href="#" title="供應鏈">供應鏈</a></li>
+                <li><a href="#" title="綠色智造">綠色智造</a></li>
+                <li><a href="#" title="包容職場">包容職場</a></li>
+                <li><a href="#" title="社會共好">社會共好</a></li>
+                <li><a href="#" title="永續報告書">永續報告書</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" title="人才召募">人才召募</a>
+            <ul>
+                <li><a href="#" title="選擇我們">選擇我們</a></li>
+                <li><a href="#" title="熱門職缺">熱門職缺</a></li>
+                <li><a href="#" title="召募流程">召募流程</a></li>
+                <li><a href="#" title="員工訓練">員工訓練</a></li>
+                <li><a href="#" title="員工福利">員工福利</a></li>
+            </ul>
+        </li>
+        <li>
+            <a asp-controller="News" asp-action="Index" title="新聞中心">新聞中心</a>
+            <ul>
+                <li><a asp-controller="News" asp-action="Index" title="最新消息">最新消息</a></li>
+                <li><a asp-controller="News" asp-action="Index" asp-route-category="ESG" title="ESG消息">ESG消息</a></li>
+                <li><a asp-controller="News" asp-action="Index" asp-route-category="Announcement" title="公告">公告</a></li>
+            </ul>
+        </li>
+    </ul>
+    <div class="footer-bottom">
+        <p>Copyright &copy; <span id="footer-year"></span> 企業官網 版權所有</p>
     </div>
     <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
 </footer>
