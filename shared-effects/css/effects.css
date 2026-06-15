@@ -1,0 +1,141 @@
+/* =============================================================
+ * shared-effects.css — 共用前端特效樣式
+ * -------------------------------------------------------------
+ * 從原 JSP 專案抽出、改寫為與框架無關的純 CSS class，
+ * 可直接套用於 .NET MVC（放在 wwwroot/css）或任何網站。
+ *
+ * 內含特效：
+ *   1. 圖片縮放特效  .fx-zoom            (原 inside.css/video.css 的 :hover scale)
+ *   2. 圖片輪播      .fx-carousel*       (原 Home.js + Home.css 的 adbox)
+ *   3. 文字跑馬燈    .fx-marquee*        (新增，純 CSS/JS 通用版)
+ * ============================================================= */
+
+
+/* -------------------------------------------------------------
+ * 1. 圖片縮放特效（滑鼠移上去放大）
+ *    用法：<img class="fx-zoom" src="...">
+ *    可調整放大倍率：在元素上加 style="--fx-zoom-scale:1.4"
+ * ------------------------------------------------------------- */
+.fx-zoom {
+    --fx-zoom-scale: 1.25;       /* 放大倍率，預設 1.25，可由 inline style 覆寫 */
+    transition: transform 0.5s ease;
+    will-change: transform;
+}
+.fx-zoom:hover {
+    transform: scale(var(--fx-zoom-scale));
+}
+
+/* 若放在固定框內想避免放大時溢出，外層包一個 .fx-zoom-frame */
+.fx-zoom-frame {
+    overflow: hidden;
+    display: inline-block;
+}
+
+
+/* -------------------------------------------------------------
+ * 2. 圖片輪播（自動播放 + 左右箭頭 + 圓點）
+ *    搭配 js/carousel.js 使用，結構見 README。
+ * ------------------------------------------------------------- */
+.fx-carousel {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.fx-carousel__slides {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    transition: transform 0.5s ease;   /* 滑動動畫 */
+}
+
+.fx-carousel__slides > li {
+    margin: 0;
+    padding: 0;
+    flex: 0 0 100%;                    /* 每張投影片佔滿容器寬度 */
+    overflow: hidden;
+}
+
+.fx-carousel__slides > li img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 下方圓點 */
+.fx-carousel__dots {
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+.fx-carousel__dots > li {
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.fx-carousel__dots > li.is-active,
+.fx-carousel__dots > li:hover {
+    background: #fff;
+}
+
+/* 左右箭頭按鈕 */
+.fx-carousel__btn {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    border: none;
+    background: rgba(0, 0, 0, 0.25);
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.fx-carousel__btn:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+.fx-carousel__btn--prev { left: 0; }
+.fx-carousel__btn--next { right: 0; }
+
+
+/* -------------------------------------------------------------
+ * 3. 文字跑馬燈（水平捲動，可純 CSS，也可由 marquee.js 控制）
+ *    純 CSS 用法：<div class="fx-marquee"><span>內容</span></div>
+ * ------------------------------------------------------------- */
+.fx-marquee {
+    --fx-marquee-duration: 15s;        /* 跑一圈秒數，可由 inline style 覆寫 */
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+.fx-marquee > * {
+    display: inline-block;
+    padding-left: 100%;                /* 從右側進場 */
+    animation: fx-marquee-scroll var(--fx-marquee-duration) linear infinite;
+}
+.fx-marquee:hover > * {
+    animation-play-state: paused;      /* 滑鼠移上暫停 */
+}
+
+@keyframes fx-marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-100%); }
+}

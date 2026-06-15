@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>共用前端特效 Demo</title>
+    <link rel="stylesheet" href="css/effects.css">
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; max-width: 720px; margin: 0 auto; padding: 24px; background: #f5f5f5; }
+        h2 { margin-top: 40px; border-left: 5px solid #00bb00; padding-left: 10px; }
+        .demo-img { width: 200px; height: 200px; object-fit: cover; border-radius: 8px; }
+        .fx-carousel { border-radius: 8px; }
+        .fx-carousel__slides > li { height: 260px; }
+        .fx-marquee { background: #222; color: #0f0; padding: 8px; border-radius: 6px; }
+        .placeholder { display:flex; align-items:center; justify-content:center; color:#fff; font-size:28px; }
+    </style>
+</head>
+<body>
+    <h1>共用前端特效 Demo</h1>
+
+    <h2>1. 圖片縮放特效（滑鼠移上去放大）</h2>
+    <span class="fx-zoom-frame">
+        <img class="fx-zoom demo-img" src="https://picsum.photos/id/1015/200" alt="zoom">
+    </span>
+    <img class="fx-zoom demo-img" style="--fx-zoom-scale:1.5" src="https://picsum.photos/id/1025/200" alt="zoom2">
+
+    <h2>2. 圖片輪播</h2>
+    <div class="fx-carousel" id="banner">
+        <ul class="fx-carousel__slides">
+            <li><div class="placeholder" style="background:#e74c3c;height:100%">Slide 1</div></li>
+            <li><div class="placeholder" style="background:#3498db;height:100%">Slide 2</div></li>
+            <li><div class="placeholder" style="background:#2ecc71;height:100%">Slide 3</div></li>
+        </ul>
+        <ul class="fx-carousel__dots"></ul>
+        <button class="fx-carousel__btn fx-carousel__btn--prev">&#10094;</button>
+        <button class="fx-carousel__btn fx-carousel__btn--next">&#10095;</button>
+    </div>
+
+    <h2>3. 文字跑馬燈</h2>
+    <div id="news"></div>
+
+    <h2>4. 圖片上傳即時預覽</h2>
+    <input type="file" id="imageFile" accept="image/*">
+    <br><br>
+    <img id="imageDemo" class="demo-img" alt="預覽圖" style="background:#ddd">
+
+    <script src="js/carousel.js"></script>
+    <script src="js/marquee.js"></script>
+    <script src="js/image-preview.js"></script>
+    <script>
+        new FxCarousel('#banner', { interval: 2500 });
+        new FxMarquee('#news', { text: '最新消息：這是從 JSP 專案抽出、可用於 .NET MVC 的共用跑馬燈特效！', duration: 14 });
+        new FxImagePreview('#imageFile', '#imageDemo');
+    </script>
+</body>
+</html>
